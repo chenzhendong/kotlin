@@ -8,7 +8,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.popyoyo.kotlin</groupId>
   <artifactId>kt-util</artifactId>
-  <name>com.popyoyo.kotlin.ktweb vertx-web</name>
+  <name>Kotlin Utilities</name>
   <version>1.0</version>
   <build>
     <plugins>
@@ -34,6 +34,13 @@
     </plugins>
   </build>
   <dependencies>
+    <dependency>
+      <groupId>org.jetbrains.exposed</groupId>
+      <artifactId>exposed</artifactId>
+      <version>0.7.4</version>
+      <type>pom</type>
+      <scope>compile</scope>
+    </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-test-junit</artifactId>
