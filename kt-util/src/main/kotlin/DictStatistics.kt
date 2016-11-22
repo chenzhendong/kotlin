@@ -3,12 +3,14 @@ package com.mmm.his.nlp.rapidcontent.util
 import org.xml.sax.Attributes
 import org.xml.sax.helpers.DefaultHandler
 import java.io.File
+import java.nio.charset.Charset
 import javax.xml.parsers.SAXParserFactory
 
 
-val varStrSet : MutableSet<String> = mutableSetOf()
-val propValueSets : MutableMap<String, MutableSet<String>> = mutableMapOf()
-
+val variantStrSet : MutableSet<String> = mutableSetOf()
+val propertyMap : MutableMap<String, Integer> = mutableMapOf()
+val propertyValueSet :MutableSet<String> = mutableSetOf()
+var propertySn = Integer(1)
 
 fun main(args: Array<String>) {
     val handler = DictStatiscisHandler()
@@ -23,21 +25,25 @@ fun main(args: Array<String>) {
         parser.parse(file, handler)
     }
 
+    val varFile = File("/Users/a4d98zz/tmp/varstr.txt").printWriter(Charset.forName("UTF-8"))
+    val propertyFile = File("/Users/a4d98zz/tmp/prop.txt").printWriter(Charset.forName("UTF-8"))
+    val propValueFile = File("/Users/a4d98zz/tmp/propValue.txt").printWriter(Charset.forName("UTF-8"))
 
-    println("var string size: ${varStrSet.size}")
-    for( propName in propValueSets.keys){
-        println("$propName: ${propValueSets[propName]?.size}")
-    }
-    /*val varFile = File("/Users/a4d98zz/tmp/varstr.txt").printWriter(Charset.forName("UTF-8"))
-    val cuiFile = File("/Users/a4d98zz/tmp/cuistr.txt").printWriter(Charset.forName("UTF-8"))
-
-    for(str in varStrSet){
+    for(str in variantStrSet){
         varFile.println(str)
     }
 
-    for(str in cuiSet){
-        cuiFile.println(str)
-    }*/
+    for((key,value) in propertyMap){
+        propertyFile.println("$value\t$key")
+    }
+
+    for(str in propertyValueSet){
+        propValueFile.println(str)
+    }
+
+    varFile.close()
+    propertyFile.close()
+    propValueFile.close()
 
 }
 
@@ -51,20 +57,21 @@ class DictStatiscisHandler : DefaultHandler() {
                 for(i in 0..len-1) {
                     val aname = attrs.getQName(i)
                     val avalue = attrs.getValue(i)
-                    val pset = propValueSets.get(aname)
-                    if(pset == null){
-                        val newSet = mutableSetOf(avalue)
-                        propValueSets.put(aname, newSet)
-                    } else {
-                        pset.add(avalue)
+
+                    var pid = propertyMap.get(aname)
+                    if(pid == null){
+                        pid = propertySn
+                        propertyMap.put(aname, propertySn)
+                        propertySn = Integer(propertySn.toInt()+1)
                     }
 
+                    propertyValueSet.add(avalue+"\t"+pid)
                 }
 
             }
             "variant" -> {
                 val varStr = attrs.getValue("base")
-                varStrSet.add(varStr)
+                variantStrSet.add(varStr.replace("\\","\\\\"))
             }
         }
     }

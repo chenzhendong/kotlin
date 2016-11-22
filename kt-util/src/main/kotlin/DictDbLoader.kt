@@ -28,7 +28,7 @@ object VarStr : Table("tblVariantString") {
 object Variant : Table("tblVariant") {
     val id = integer("id").autoIncrement().primaryKey()
     val dictId = (integer("dictionaryId") references Dictionary.id)
-    val varStrId = (integer("varStringId") references Dictionary.id)
+    val varStrId = (integer("variantStringId") references Dictionary.id)
     val priority = integer("priority")
     val lastUpdatedOn = datetime("lastUpdatedOn")
 }
